@@ -4,3 +4,12 @@
 <% })  %>
 <% } %>
 <% console.log((typeof errors != 'undefined'));%>
+
+<% if(success_msg != '') { %>
+<p><%=success_msg %></p>
+
+<%=error_msg %>
+<% } %>
+<% if(error != '') { %>
+<%= error %>
+<% } %>

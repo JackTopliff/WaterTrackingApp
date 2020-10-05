@@ -2,6 +2,8 @@ const User = require("../models/user.js");
 const express = require('express');
 const { render } = require("ejs");
 const router = express.Router();
+const session = require('express-session');
+const flash = require('connect-flash');
 
 router.get('/login', (req, res) => {
     res.render('login');
@@ -60,8 +62,9 @@ router.post('/register', (req, res) => {
                         
                         newUser.save()
                         .then((value) => {
-                            console.log(value)
-                        res.redirect('users/login');
+                            console.log(value);
+                            req.flash('success_msg', 'You have now been registered!')
+                            res.redirect('users/login');
                         })
                         .catch(value => console.log(value));
                     });
