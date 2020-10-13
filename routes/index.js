@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require("../models/user");
+const Water = require("../models/water");
 const bcrypt = require('bcrypt');
 const session = require('express-session');
 const flash = require('connect-flash');
@@ -17,6 +18,7 @@ router.get('/register', (req, res) => {
 
 router.post('/register', (req, res) => {
     const {name, email, password, password2} = req.body;
+    
     let errors = [];
     console.log(' Name ' + name + ' Email ' + email + ' Password ' + password);
     
@@ -81,6 +83,7 @@ router.post('/register', (req, res) => {
 )
 
 router.post('/login', (req, res, next) => {
+    
     passport.authenticate('local',{
        successRedirect : '/dashboard',
        failureRedirect : '/login',
@@ -92,6 +95,32 @@ router.get('/login', (req, res) => {
 })
 
 router.get('/dashboard', ensureAuthenticated, (req, res) => {
+    console.log(global.email);
+    //Water.create({ waterGoal: 120, waterConsumed: 0, email: 'j@j.com' });
+    Water.findOne({email : global.email}).sort({ date: -1 }).exec((err,result) => {
+            
+        if(result) {
+            //console.log(result.date.toISOString());
+            var d = new Date(result.date);
+            var mongoDay = d.getDate();
+            var mongoMonth = d.getMonth() + 1; //Months are zero based
+            var mongoYear = d.getFullYear();
+            //console.log(mongoDay + "-" + mongoMonth + "-" + mongoYear);
+
+            var currDate = new Date();
+            var currDay = currDate.getDate();
+            var currMonth = currDate.getMonth() + 1;
+            var currYear = currDate.getFullYear();
+            //console.log(currDay + "-" + currMonth + "-" + currYear);
+        }
+        else {
+            Water.create({ waterGoal: 0, waterConsumed: 0, email: global.email });
+        }
+        
+        
+    })
+
+
     res.render('dashboard', {
         user: req.user
     });

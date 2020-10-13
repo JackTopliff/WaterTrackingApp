@@ -6,7 +6,7 @@ const User = require("../models/user");
 module.exports = function(passport) {
     passport.use(
         new LocalStrategy({usernameField : 'email'}, (email, password, done) => {
-
+            global.email = email;
             User.findOne({email : email})
             .then((user) => {
                 if(!user) {
@@ -19,13 +19,14 @@ module.exports = function(passport) {
                     return done(null, user);
                 }
                 else {
-                    return done(null, false, {message : 'pass incorrect'});
+                    return done(null, false, {message : 'password is incorrect'});
                 }
             })
             })
             .catch((err) => console.log(err))
         })
     )
+    
     passport.serializeUser(function(user, done) {
         done(null, user.id);
     });
