@@ -98,7 +98,7 @@ router.get('/dashboard', ensureAuthenticated, (req, res) => {
     console.log(global.email);
     //Water.create({ waterGoal: 120, waterConsumed: 0, email: 'j@j.com' });
     Water.findOne({email : global.email}).sort({ date: -1 }).exec((err,result) => {
-            
+        
         if(result) {
             //console.log(result.date.toISOString());
             var d = new Date(result.date);
@@ -106,12 +106,18 @@ router.get('/dashboard', ensureAuthenticated, (req, res) => {
             var mongoMonth = d.getMonth() + 1; //Months are zero based
             var mongoYear = d.getFullYear();
             //console.log(mongoDay + "-" + mongoMonth + "-" + mongoYear);
+            date1 = mongoDay + "-" + mongoMonth + "-" + mongoYear;
 
             var currDate = new Date();
             var currDay = currDate.getDate();
             var currMonth = currDate.getMonth() + 1;
             var currYear = currDate.getFullYear();
             //console.log(currDay + "-" + currMonth + "-" + currYear);
+            date2 = currDay + "-" + currMonth + "-" + currYear;
+            if(date1 != date1) {
+                Water.create({ waterGoal: 0, waterConsumed: 0, email: global.email });
+            }
+
         }
         else {
             Water.create({ waterGoal: 0, waterConsumed: 0, email: global.email });
