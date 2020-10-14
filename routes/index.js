@@ -48,7 +48,7 @@ router.post('/register', (req, res) => {
         User.findOne({email : email}).exec((err,user) => {
             console.log(user);
             if(user) {
-                errors.push({msg : 'email is already registered'});
+                errors.push({msg : 'That email is already registered to another account.'});
                 render(res,errors,name,email,password,password2);
 
             }
