@@ -6,7 +6,8 @@ const bcrypt = require('bcrypt');
 const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
-const {ensureAuthenticated} = require('../config/auth.js')
+const {ensureAuthenticated} = require('../config/auth.js');
+const popup = require('node-popup');
 
 router.get('/', (req, res) => {
     res.render('welcome');
@@ -82,6 +83,46 @@ router.post('/register', (req, res) => {
     }
 )
 
+router.post('/addWater', (req, res, next) => {
+    
+    Water.findOne({email : global.email}).sort({ date: -1 }).exec((err,result) => {
+        
+        result.waterConsumed = Number(result.waterConsumed) + Number(req.body.water);
+        if(result.waterConsumed < 0) {
+            result.waterConsumed = 0;
+        }
+        result.save(function (err) {
+            if(err) {
+                console.error('ERROR!');
+            }
+        });
+    })
+
+    res.redirect('/dashboard');
+    
+})
+
+router.post('/setGoal', (req, res, next) => {
+    
+    Water.findOne({email : global.email}).sort({ date: -1 }).exec((err,result) => {
+        
+        result.waterGoal = req.body.goal;
+        
+        result.save(function (err) {
+            if(err) {
+                console.error('ERROR!');
+            }
+        });
+    })
+
+    res.redirect('/dashboard');
+    
+})
+
+router.get('/login', (req, res) => {
+    res.render('login');
+})
+
 router.post('/login', (req, res, next) => {
     
     passport.authenticate('local',{
@@ -95,42 +136,43 @@ router.get('/login', (req, res) => {
 })
 
 router.get('/dashboard', ensureAuthenticated, (req, res) => {
-    console.log(global.email);
-    //Water.create({ waterGoal: 120, waterConsumed: 0, email: 'j@j.com' });
+
     Water.findOne({email : global.email}).sort({ date: -1 }).exec((err,result) => {
-        
-        if(result) {
-            //console.log(result.date.toISOString());
-            var d = new Date(result.date);
-            var mongoDay = d.getDate();
-            var mongoMonth = d.getMonth() + 1; //Months are zero based
-            var mongoYear = d.getFullYear();
-            //console.log(mongoDay + "-" + mongoMonth + "-" + mongoYear);
-            date1 = mongoDay + "-" + mongoMonth + "-" + mongoYear;
-
-            var currDate = new Date();
-            var currDay = currDate.getDate();
-            var currMonth = currDate.getMonth() + 1;
-            var currYear = currDate.getFullYear();
-            //console.log(currDay + "-" + currMonth + "-" + currYear);
-            date2 = currDay + "-" + currMonth + "-" + currYear;
-            if(date1 != date1) {
-                Water.create({ waterGoal: 0, waterConsumed: 0, email: global.email });
-            }
-
-        }
-        else {
+        //Create a new entry for the user if they have a new account
+        if(!result) {
             Water.create({ waterGoal: 0, waterConsumed: 0, email: global.email });
+            res.redirect('/dashboard');
         }
+        //Get string of the result date
+        var d = new Date(result.date);
+        var mongoDay = d.getDate();
+        var mongoMonth = d.getMonth() + 1; //Months are zero based
+        var mongoYear = d.getFullYear();
+        date1 = mongoDay + "-" + mongoMonth + "-" + mongoYear;
+
+        //Get a string of the current date
+        var currDate = new Date();
+        var currDay = currDate.getDate();
+        var currMonth = currDate.getMonth() + 1;
+        var currYear = currDate.getFullYear();
+
+        //Compare the two dates and create a new entry if one doesn't exist for the current day
+        date2 = currDay + "-" + currMonth + "-" + currYear;
         
-        
+        //Create a new entry if one doesn't exist for the day
+        if(date1 != date2) {
+            Water.create({ waterGoal: 0, waterConsumed: 0, email: global.email });
+            res.redirect('/dashboard');
+        }
+
+        res.render('dashboard', {
+            user: req.user,
+            waterConsumed: result.waterConsumed,
+            waterGoal: result.waterGoal
+        });  
     })
-
-
-    res.render('dashboard', {
-        user: req.user
-    });
 })
+
 router.get('/logout', (req, res) => {
     req.logout();
     req.flash('success_msg', 'Successfully logged out');

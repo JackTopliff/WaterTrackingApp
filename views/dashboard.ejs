@@ -1,4 +1,87 @@
 <html>
+    <!--
+        Code for the fill effect animation found here: https://codingflag.blogspot.com/2020/09/liquid-fill-animation-effect-using-html-and-css.html
+    -->
+
+
     <p> Welcome <%= user.name %> </p>
+    <%
+        var fillAmount = 0;
+        if(waterConsumed == 0) {
+            fillAmount = 250;
+        }
+        else if((waterConsumed / waterGoal) > 1) {
+            fillAmount = -50
+        }
+        else {
+            fillAmount = 250 - ((waterConsumed / waterGoal) * 250);
+        }
+        
+    %>
+       
+    <style>
+        .box {
+        width:200px;
+        height:200px;
+        border:10px solid #ccc;
+        border-radius:10px;
+        line-height:200px;
+        text-align:center;
+        color:#ddd;
+        font-size:25px;
+        font-weight:600;
+        text-transform:uppercase;
+        position:relative;
+        overflow:hidden;
+        }
+        .box:before {
+        content:"";
+        position:absolute;
+        width:400px;
+        height:400px;
+        background:#00acee;
+        left:50%;
+        transform:translateX(-50%);
+        border-radius:40%;
+        animation:fill 7s;
+        animation-fill-mode: forwards;
+        z-index:-1;
+        }
+        @keyframes fill {
+        from {
+            top:250px;
+            transform:translateX(-50%) rotate(0deg);
+        }
+        to {
+            top: <%=fillAmount%>;
+            transform:translateX(-50%) rotate(360deg);
+        }
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+        }
+    </style>
+    
+    <div class="box">
+        <%=  Math.round(waterConsumed / waterGoal * 100); %>%
+    </div>
+    <p>You have consumed <%=waterConsumed%> ounces of water toward your goal of <%=waterGoal%> ounces.</p>
+    <p><% if(waterConsumed > waterGoal) { %> Congrats you've met your daily water goal! <% } %> </p>
     <a href="/logout">Logout</a>
+
+
+    <form action="/addWater" method="POST">
+        <input type="number"name="water" placeholder="Add water">
+        <button type="submit" class="btn btn-primary btn-block">Add</button>
+        <input type="hidden" value=<%= waterConsumed %> name="waterConsumed" />
+    </form>
+
+    <form action="/setGoal" method="POST">
+        <input type= "number" name="goal" placeholder="Set/change your goal">
+        <button type="submit" class="btn btn-primary btn-block">Set</button>
+    </form>
+
 </html>
