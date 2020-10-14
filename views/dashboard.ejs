@@ -68,6 +68,11 @@
             margin-left: -100px;
             
         }
+        #centeredButton {
+            width: 100px; 
+            margin: 0 auto;
+            
+        }
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
         -webkit-appearance: none;
@@ -75,43 +80,40 @@
         }
         p.a {
             font-family: 'Roboto', sans-serif;
-            text-align: center;
             font-size: 20px;
         }
     </style>
-    <nav class="navbar navbar-inverse navbar-static-top">
-        <div class="container-fluid">
-          <div class="navbar-header">
-            <a class="navbar-brand" href="dashboard">WaterTracker</a>
-            </div>
-            <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#">Page 1</a></li>
-            <li><a href="#">Page 2</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-            <li><a href="login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-            <li><a href="logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
-            </ul>
-         </div>
-        </nav>
+
+    <%- include('./partials/header.ejs') %>
+
     
+    <div class="text-center"><h1>Welcome <%= user.name %>!</h1></div>
+
     <div id="inner" class="box">
         <p><% if(waterGoal != 0) {%><%=Math.round(waterConsumed / waterGoal * 100);%><%} else {%><%=0%><%} %></p>
     </div>
+    <div class="text-center">
     <p class="a">You have consumed <%=waterConsumed%> ounces of water towards your goal of <%=waterGoal%> ounces.</p>
     <p><% if(waterConsumed > waterGoal) { %> Congrats you've met your daily water goal! <% } %> </p>
+    </div>
 
 
     <form action="/addWater" method="POST">
+        <div class="text-center" style="margin-bottom: 5px;"> 
         <input type="number"name="water" placeholder="Add water">
-        <button type="submit" class="btn btn-primary btn-block">Add</button>
+        </div>
+        <div class="text-center">
+        <button type="submit" class="btn btn-primary btn-md">Add</button>
+        </div>
         <input type="hidden" value=<%= waterConsumed %> name="waterConsumed" />
     </form>
 
     <form action="/setGoal" method="POST">
+        <div class="text-center" style="margin-bottom: 5px;"> 
         <input type= "number" name="goal" placeholder="Set/change your goal">
-        <button type="submit" class="btn btn-primary btn-block">Set</button>
+        </div>
+        <div class="text-center"> 
+        <button type="submit" class="btn btn-primary btn-md">Set</button>
+        </div>
     </form>
-    <p> Welcome <%= user.name %> </p>
 </html>
