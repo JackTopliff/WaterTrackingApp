@@ -21,41 +21,41 @@
        
     <style>
         .box {
-        width:200px;
-        height:200px;
-        border:10px solid #ccc;
-        border-radius:10px;
-        line-height:200px;
-        text-align:center;
-        color:#ddd;
-        font-size:25px;
-        font-weight:600;
-        text-transform:uppercase;
-        position:relative;
-        overflow:hidden;
+            width:200px;
+            height:200px;
+            border:10px solid #ccc;
+            border-radius:10px;
+            line-height:200px;
+            text-align:center;
+            color:#ddd;
+            font-size:25px;
+            font-weight:600;
+            text-transform:uppercase;
+            position:relative;
+            overflow:hidden;
         }
         .box:before {
-        content:"";
-        position:absolute;
-        width:400px;
-        height:400px;
-        background:#00acee;
-        left:50%;
-        transform:translateX(-50%);
-        border-radius:40%;
-        animation:fill 7s;
-        animation-fill-mode: forwards;
-        z-index:-1;
+            content:"";
+            position:absolute;
+            width:400px;
+            height:400px;
+            background:#00acee;
+            left:50%;
+            transform:translateX(-50%);
+            border-radius:40%;
+            animation:fill 7s;
+            animation-fill-mode: forwards;
+            z-index:-1;
         }
         @keyframes fill {
-        from {
-            top:250px;
-            transform:translateX(-50%) rotate(0deg);
-        }
-        to {
-            top: <%=fillAmount%>;
-            transform:translateX(-50%) rotate(360deg);
-        }
+            from {
+                top:250px;
+                transform:translateX(-50%) rotate(0deg);
+            }
+            to {
+                top: <%=fillAmount%>;
+                transform:translateX(-50%) rotate(360deg);
+            }
         }
 
         input::-webkit-outer-spin-button,
@@ -66,7 +66,8 @@
     </style>
     
     <div class="box">
-        <%=  Math.round(waterConsumed / waterGoal * 100); %>%
+        
+        <p><% if(waterGoal != 0) {%><%=Math.round(waterConsumed / waterGoal * 100);%><%} else {%><%=0%><%} %></p>
     </div>
     <p>You have consumed <%=waterConsumed%> ounces of water toward your goal of <%=waterGoal%> ounces.</p>
     <p><% if(waterConsumed > waterGoal) { %> Congrats you've met your daily water goal! <% } %> </p>
