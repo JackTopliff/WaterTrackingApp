@@ -1,10 +1,9 @@
-<html>
+<html lang="en">
     <!--
         Code for the fill effect animation found here: https://codingflag.blogspot.com/2020/09/liquid-fill-animation-effect-using-html-and-css.html
     -->
 
 
-    <p> Welcome <%= user.name %> </p>
     <%
         var fillAmount = 0;
         if(waterConsumed == 0) {
@@ -18,8 +17,14 @@
         }
         
     %>
-       
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+        </style>
+    <style>
+        
         .box {
             width:200px;
             height:200px;
@@ -57,21 +62,45 @@
                 transform:translateX(-50%) rotate(360deg);
             }
         }
-
+        #inner {
+            position:relative;
+            left: 50%;
+            margin-left: -100px;
+            
+        }
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
         }
+        p.a {
+            font-family: 'Roboto', sans-serif;
+            text-align: center;
+            font-size: 20px;
+        }
     </style>
+    <nav class="navbar navbar-inverse navbar-static-top">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="dashboard">WaterTracker</a>
+            </div>
+            <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#">Page 1</a></li>
+            <li><a href="#">Page 2</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+            <li><a href="login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            <li><a href="logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+            </ul>
+         </div>
+        </nav>
     
-    <div class="box">
-        
+    <div id="inner" class="box">
         <p><% if(waterGoal != 0) {%><%=Math.round(waterConsumed / waterGoal * 100);%><%} else {%><%=0%><%} %></p>
     </div>
-    <p>You have consumed <%=waterConsumed%> ounces of water toward your goal of <%=waterGoal%> ounces.</p>
+    <p class="a">You have consumed <%=waterConsumed%> ounces of water towards your goal of <%=waterGoal%> ounces.</p>
     <p><% if(waterConsumed > waterGoal) { %> Congrats you've met your daily water goal! <% } %> </p>
-    <a href="/logout">Logout</a>
 
 
     <form action="/addWater" method="POST">
@@ -84,5 +113,5 @@
         <input type= "number" name="goal" placeholder="Set/change your goal">
         <button type="submit" class="btn btn-primary btn-block">Set</button>
     </form>
-
+    <p> Welcome <%= user.name %> </p>
 </html>
