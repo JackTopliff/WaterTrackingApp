@@ -1,0 +1,30 @@
+<html>
+  <%- include('./partials/header.ejs') %>
+  <style>
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+  </style>
+  <body>
+    <div class="text-center">
+      <form method="POST" action=/changeName>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" value=<%=global.user.name%>>
+        <button type="submit">Change</button>
+      </form>
+      <form method="POST" action=/changeEmail>
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" value=<%=global.email%>>
+        <button type="submit">Change</button>
+      </form>
+      <form method="POST" action=/changeWater>
+        <label for="water">Daily Water Goal:</label>
+        <input type="number" min="0" id="water" name="water" value=<%=global.user.goal%>>
+        <button type="submit">Change</button>
+      </form>
+
+    </div>
+  </body>
+</html>

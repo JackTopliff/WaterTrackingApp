@@ -15,6 +15,10 @@ const userSchema = new mongoose.Schema({
     date :{
         type : Date,
         default : Date.now
+    },
+    goal :{
+        type : Number,
+        default: 0
     }
 });
 const User = mongoose.model('User', userSchema);

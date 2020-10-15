@@ -17,6 +17,10 @@ router.get('/register', (req, res) => {
     res.render('register');
 })
 
+router.get('/account', ensureAuthenticated, (req, res) => {
+    res.render('account');
+})
+
 router.post('/register', (req, res) => {
     const {name, email, password, password2} = req.body;
     
@@ -139,37 +143,42 @@ router.get('/dashboard', ensureAuthenticated, (req, res) => {
 
     Water.findOne({email : global.email}).sort({ date: -1 }).exec((err,result) => {
         //Create a new entry for the user if they have a new account
-        if(!result) {
+        console.log(global.email);
+        console.log(!result);
+        if(result == null) {
             Water.create({ waterGoal: 0, waterConsumed: 0, email: global.email });
             res.redirect('/dashboard');
         }
-        //Get string of the result date
-        var d = new Date(result.date);
-        var mongoDay = d.getDate();
-        var mongoMonth = d.getMonth() + 1; //Months are zero based
-        var mongoYear = d.getFullYear();
-        date1 = mongoDay + "-" + mongoMonth + "-" + mongoYear;
+        else {
+            //Get string of the result date
+            var d = new Date(result.date);
+            var mongoDay = d.getDate();
+            var mongoMonth = d.getMonth() + 1; //Months are zero based
+            var mongoYear = d.getFullYear();
+            date1 = mongoDay + "-" + mongoMonth + "-" + mongoYear;
 
-        //Get a string of the current date
-        var currDate = new Date();
-        var currDay = currDate.getDate();
-        var currMonth = currDate.getMonth() + 1;
-        var currYear = currDate.getFullYear();
+            //Get a string of the current date
+            var currDate = new Date();
+            var currDay = currDate.getDate();
+            var currMonth = currDate.getMonth() + 1;
+            var currYear = currDate.getFullYear();
 
-        //Compare the two dates and create a new entry if one doesn't exist for the current day
-        date2 = currDay + "-" + currMonth + "-" + currYear;
-        
-        //Create a new entry if one doesn't exist for the day
-        if(date1 != date2) {
-            Water.create({ waterGoal: 0, waterConsumed: 0, email: global.email });
-            res.redirect('/dashboard');
+            //Compare the two dates and create a new entry if one doesn't exist for the current day
+            date2 = currDay + "-" + currMonth + "-" + currYear;
+            
+            //Create a new entry if one doesn't exist for the day
+            if(date1 != date2) {
+                Water.create({ waterGoal: 0, waterConsumed: 0, email: global.email });
+                res.redirect('/dashboard');
+            }
+            global.user = req.user;
+
+            res.render('dashboard', {
+                user: req.user,
+                waterConsumed: result.waterConsumed,
+                waterGoal: result.waterGoal
+            });  
         }
-
-        res.render('dashboard', {
-            user: req.user,
-            waterConsumed: result.waterConsumed,
-            waterGoal: result.waterGoal
-        });  
     })
 })
 

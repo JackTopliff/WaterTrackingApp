@@ -7,22 +7,21 @@
     <%
         var fillAmount = 0;
         if(waterConsumed == 0) {
-            fillAmount = 250;
+            fillAmount = 200;
         }
         else if((waterConsumed / waterGoal) > 1) {
-            fillAmount = -50
+            fillAmount = 0
         }
         else {
-            fillAmount = 250 - ((waterConsumed / waterGoal) * 250);
+            fillAmount = 200 - ((waterConsumed / waterGoal) * 200);
+            console.log(fillAmount);
         }
         
     %>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-        </style>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');</style>
     <style>
         
         .box {
@@ -54,7 +53,7 @@
         }
         @keyframes fill {
             from {
-                top:250px;
+                top:200px;
                 transform:translateX(-50%) rotate(0deg);
             }
             to {
@@ -75,42 +74,62 @@
         }
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
+            -webkit-appearance: none;
+            margin: 0;
         }
         p.a {
             font-family: 'Roboto', sans-serif;
             font-size: 20px;
         }
+
     </style>
-
     <%- include('./partials/header.ejs') %>
-
     
     <div class="text-center"><h1>Welcome <%= user.name %>!</h1></div>
 
     <div id="inner" class="box">
-        <p><% if(waterGoal != 0) {%><%=Math.round(waterConsumed / waterGoal * 100);%><%} else {%><%=0%><%} %></p>
+        <p style="color: black;"><% if(waterGoal != 0) {%><%=Math.round(waterConsumed / waterGoal * 100);%><%} else {%><%=0%><%} %>%</p>
     </div>
     <div class="text-center">
-    <p class="a">You have consumed <%=waterConsumed%> ounces of water towards your goal of <%=waterGoal%> ounces.</p>
-    <p><% if(waterConsumed > waterGoal) { %> Congrats you've met your daily water goal! <% } %> </p>
+        <p class="a">You have consumed <%=waterConsumed%> ounces of water towards your goal of <%=waterGoal%>.</p>
+        <p><% if(waterConsumed > waterGoal) { %> Congrats you've met your daily water goal! <% } %> </p>
     </div>
+    
 
 
     <form action="/addWater" method="POST">
         <div class="text-center" style="margin-bottom: 5px;"> 
-        <input type="number"name="water" placeholder="Add water (oz.)">
+            <input type="number" id="water" name="water" placeholder="Add water (oz.)">
         </div>
-        <div class="text-center">
-        <button type="submit" class="btn btn-primary btn-md">Add</button>
-        </div>
+        <div class="container text-center">
+            <!-- Trigger the modal with a button -->
+            <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#myModal" required>Add</button>
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" role="dialog">
+              <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Confirm</h4>
+                  </div>
+                  <div class="modal-body">
+                    <p id="modalText">Are you sure you want to add this?</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-default">Yes</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         <input type="hidden" value=<%= waterConsumed %> name="waterConsumed" />
     </form>
 
     <form action="/setGoal" method="POST">
         <div class="text-center" style="margin-bottom: 5px;"> 
-        <input type= "number" name="goal" placeholder="Set/change your goal (oz.)">
+        <input type= "number" name="goal" placeholder="Set/change your goal (oz.)" required>
         </div>
         <div class="text-center"> 
         <button type="submit" class="btn btn-primary btn-md">Set</button>
