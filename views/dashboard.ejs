@@ -13,8 +13,9 @@
             fillAmount = 0
         }
         else {
-            fillAmount = 200 - ((waterConsumed / waterGoal) * 200);
+            fillAmount = 175 - ((waterConsumed / waterGoal) * 200);
             console.log(fillAmount);
+            
         }
         
     %>
@@ -81,9 +82,11 @@
             font-family: 'Roboto', sans-serif;
             font-size: 20px;
         }
+        
 
     </style>
     <%- include('./partials/header.ejs') %>
+    
     
     <div class="text-center"><h1>Welcome <%= user.name %>!</h1></div>
 

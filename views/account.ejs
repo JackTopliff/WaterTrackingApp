@@ -11,7 +11,7 @@
     <div class="text-center">
       <form method="POST" action=/changeName>
         <label for="name">Name:</label>
-        <input type="text" id="name" name="name" value=<%=global.user.name%>>
+        <input onkeypress="return /[a-z]/i.test(event.key)" type="text" id="name" name="name" value=<%=global.user.name%>>
         <button type="submit">Change</button>
       </form>
       <form method="POST" action=/changeEmail>
@@ -21,7 +21,7 @@
       </form>
       <form method="POST" action=/changeWater>
         <label for="water">Daily Water Goal:</label>
-        <input type="number" min="0" id="water" name="water" value=<%=global.user.goal%>>
+        <input required type="number" min="0" id="water" name="water" value=<%=global.goal%>>
         <button type="submit">Change</button>
       </form>
 

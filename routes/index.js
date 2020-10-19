@@ -18,6 +18,15 @@ router.get('/register', (req, res) => {
 })
 
 router.get('/account', ensureAuthenticated, (req, res) => {
+    User.findOne({email : email}).exec((err,user) => {
+        
+        if(user) {
+            global.goal = user.goal;
+        }
+        else {
+            console.log("ERROR!");
+        }
+    });
     res.render('account');
 })
 
@@ -87,7 +96,7 @@ router.post('/register', (req, res) => {
     }
 )
 
-router.post('/addWater', (req, res, next) => {
+router.post('/addWater', ensureAuthenticated, (req, res, next) => {
     
     Water.findOne({email : global.email}).sort({ date: -1 }).exec((err,result) => {
         
@@ -95,16 +104,15 @@ router.post('/addWater', (req, res, next) => {
         if(result.waterConsumed < 0) {
             result.waterConsumed = 0;
         }
-        result.save(function (err) {
-            if(err) {
-                console.error('ERROR!');
-            }
-        });
-    })
-
-    res.redirect('/dashboard');
+        result.save()
+        .then(() => {
+            res.redirect('/dashboard');
+        })
+    
     
 })
+
+});
 
 router.post('/setGoal', (req, res, next) => {
     
@@ -135,16 +143,25 @@ router.post('/login', (req, res, next) => {
        failureFlash : true,     
     }) (req, res, next);
 })
+
 router.get('/login', (req, res) => {
     res.render('login');
 })
 
 router.get('/dashboard', ensureAuthenticated, (req, res) => {
+    User.findOne({email : global.email}).exec((err,user) => {
+        if(user) {
+            
+            global.goal = user.goal;
+            
+        }
+        else {
+            console.log("ERROR!");
+        }
+    });
 
     Water.findOne({email : global.email}).sort({ date: -1 }).exec((err,result) => {
         //Create a new entry for the user if they have a new account
-        console.log(global.email);
-        console.log(!result);
         if(result == null) {
             Water.create({ waterGoal: 0, waterConsumed: 0, email: global.email });
             res.redirect('/dashboard');
@@ -168,7 +185,7 @@ router.get('/dashboard', ensureAuthenticated, (req, res) => {
             
             //Create a new entry if one doesn't exist for the day
             if(date1 != date2) {
-                Water.create({ waterGoal: 0, waterConsumed: 0, email: global.email });
+                Water.create({ waterGoal: global.goal, waterConsumed: 0, email: global.email });
                 res.redirect('/dashboard');
             }
             global.user = req.user;
@@ -177,6 +194,7 @@ router.get('/dashboard', ensureAuthenticated, (req, res) => {
                 user: req.user,
                 waterConsumed: result.waterConsumed,
                 waterGoal: result.waterGoal
+                
             });  
         }
     })
@@ -188,4 +206,70 @@ router.get('/logout', (req, res) => {
     res.redirect('/login');
 })
 
+router.post('/changeWater', ensureAuthenticated, (req, res, next) => {
+    User.findOne({email : global.email}).exec((err,user) => {
+        if(user && req.body.water != null)
+        {
+            user.goal = req.body.water;
+            global.goal = user.goal;
+            user.save();
+        }
+        res.redirect('/account');
+    })
+    
+    
+})
+
+router.post('/changeName', ensureAuthenticated, (req, res, next) => {
+    User.findOne({email : global.email}).exec((err,user) => {
+        
+        if(user && req.body.name != null)
+        {
+            user.name = req.body.name;
+            global.user.name = user.name;
+            user.save();
+        }
+        res.redirect('/account');
+    })
+    
+    
+})
+
+router.post('/changeEmail', ensureAuthenticated, (req, res, next) => {
+    User.exists({email : req.body.email}, function (err, user) { 
+        if (user){ 
+            console.log("this email is not available");
+
+        }else{ 
+            console.log("This email is available"); // false 
+            User.findOne({email : global.email}).exec((err,user1) => {
+                
+                
+                if(user1 && req.body.email != null)
+                {
+                    
+                    user1.email = req.body.email;
+                    
+                    global.user.email = user1.email;
+                    user1.save();
+                    Water.updateMany({email : global.email},  
+                        {email : req.body.email}, function (err, docs) { 
+                        if (err){ 
+                            console.log(err) 
+                        } 
+                        else{ 
+                            console.log("Updated Docs : ", docs); 
+                        } 
+                    }); 
+                }
+                
+                
+            })
+        }
+        req.logout();
+        req.flash('success_msg', 'Email successfully changed!');
+        res.redirect('/login');
+    }); 
+    
+})
 module.exports = router;
