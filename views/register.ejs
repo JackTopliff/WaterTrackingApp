@@ -1,24 +1,80 @@
 <html>
-    <h1>Register</h1>
-    <%- include('./partials/messages') %>
-    <form action="/register" method="POST">
-    <div>
-        <label for="name">Name</label>
-        <input type="name" name="name" placeholder="Enter name" value="<% typeof name != 'undefined' ? name : ''%>"/>
+  <%- include('./partials/nonuserheader.ejs') %>
+  <h1 class="text-center">Register</h1>
+  <%- include('./partials/messages') %>
+  <style>
+    #inner {
+      position: relative;
+      left: 50%;
+      margin-left: -100px;
+    }
+    .center_div {
+      margin: 0 auto;
+      width: 35%; /* value of your choice which suits your alignment */
+    }
+  </style>
+
+  <form class="center_div" action="/register" method="POST">
+    <div class="form-group row">
+      <label for="inputEmail3" class="col-sm-2 col-form-label">Name</label>
+      <div class="col-sm-10">
+        <input
+          type="name"
+          name="name"
+          class="form-control"
+          id="inputEmail3"
+          placeholder="Enter name"
+          value="<% typeof name != 'undefined' ? name : ''%>"
+        />
+      </div>
     </div>
-    <div>
-        <label for="email">Email</label>
-        <input type="email" name="email" placeholder="Enter email" value="<% typeof email != 'undefined' ? email : ''%>"/>
+    <div class="form-group row">
+      <label for="inputPassword3" class="col-sm-2 col-form-label">Email</label>
+      <div class="col-sm-10">
+        <input
+          type="email"
+          name="email"
+          class="form-control"
+          id="inputPassword3"
+          placeholder="Enter email"
+          value="<% typeof email != 'undefined' ? email : ''%>"
+        />
+      </div>
     </div>
-    <div>
-        <label for="password">Password</label>
-        <input type="password" name="password" placeholder="Enter password" value="<% typeof password != 'undefined' ? password : ''%>"/>
+    <div class="form-group row">
+      <label for="inputPassword3" class="col-sm-2 col-form-label"
+        >Password</label
+      >
+      <div class="col-sm-10">
+        <input
+          type="password"
+          name="password"
+          class="form-control"
+          id="inputPassword3"
+          placeholder="Enter password"
+          value="<% typeof password != 'undefined' ? password : ''%>"
+        />
+      </div>
     </div>
-    <div>
-        <label for="password2">Confirm password</label>
-        <input type="password" name="password2" placeholder="Confirm password" value="<% typeof password2 != 'undefined' ? password2 : ''%>"/>
+    <div class="form-group row">
+      <label for="inputPassword3" class="col-sm-2 col-form-label"
+        >Confirm Password</label
+      >
+      <div class="col-sm-10">
+        <input
+          type="password"
+          name="password2"
+          class="form-control"
+          id="inputPassword3"
+          placeholder="Confirm password"
+          value="<% typeof password2 != 'undefined' ? password2 : ''%>"
+        />
+      </div>
     </div>
-    <button type="submit" class="btn btn-primary btn-block">Register</button>
-    </button>
-    </form>
+    <div class="form-group row">
+      <div class="col-sm-10">
+        <button type="submit" class="btn btn-primary">Register</button>
+      </div>
+    </div>
+  </form>
 </html>

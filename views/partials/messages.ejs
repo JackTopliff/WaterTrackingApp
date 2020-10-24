@@ -1,19 +1,29 @@
 <div class="text-center">
-
-<% if(typeof errors != 'undefined') { %>
-<% errors.forEach(function(error) { %>
-<p> <%= error.msg %></p>
-<% })  %>
-<% } %>
-<% console.log((typeof errors != 'undefined'));%>
-
-<% if(success_msg != '') { %>
-<p><%=success_msg %></p>
-
-<%=error_msg %>
-<% } %>
-<% if(error != '') { %>
-<%= error %>
-<% } %>
-
+  <link
+    rel="stylesheet"
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+  />
+  <script
+    src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"
+  ></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    .inner {
+      width: 20%;
+      margin-left: 40%;
+      margin-right: 40%;
+    }
+  </style>
+  <% if(typeof errors != 'undefined') { %> <% errors.forEach(function(error) {
+  %>
+  <p class="alert alert-danger inner" role="alert"><%= error.msg %></p>
+  <% }) %> <% } %> <% console.log((typeof errors != 'undefined'));%> <%
+  if(success_msg != '') { %>
+  <p><%=success_msg %></p>
+  <%=error_msg %> <% } %> <% if(error != '') { %>
+  <p class="alert alert-danger inner" role="alert"><%= error %></p>
+  <% } %>
 </div>

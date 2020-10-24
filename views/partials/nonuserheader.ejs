@@ -11,15 +11,6 @@
 ></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-<script>
-  function confirmLogout() {
-    if (confirm("Are you sure you want to logout")) {
-      window.location = "logout";
-    } else {
-      return false;
-    }
-  }
-</script>
 <html>
   <nav class="navbar navbar-inverse navbar-static-top">
     <div class="container-fluid">
@@ -28,18 +19,10 @@
           >WaterTracker <span class="glyphicon glyphicon-tint"></span>
         </a>
       </div>
-      <ul class="nav navbar-nav">
-        <li class="#"><a href="/dashboard">Home</a></li>
-      </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="account">Account</a></li>
-        <li>
-          <a onclick="confirmLogout()" href="#"
-            ><span class="glyphicon glyphicon-log-in"></span> Logout</a
-          >
-        </li>
+        <li><a href="register">Register</a></li>
+        <li><a href="login">Login</a></li>
       </ul>
-      <script></script>
     </div>
   </nav>
 </html>
